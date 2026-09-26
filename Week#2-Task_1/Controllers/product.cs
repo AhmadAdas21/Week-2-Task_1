@@ -49,16 +49,14 @@ namespace Week_2_Task_1.Controllers
         {
             if (id <= 0)
             {
-                return BadRequest(
-                    new { message = "Id must be greater than zero." });
+                return BadRequest(new { message = "Id must be greater than zero." });
             }
 
             var product = _service.get_product_by_id(id);
 
             if (product is null)
             {
-                return NotFound(
-                    new { message = "Product not found." });
+                return NotFound(new { message = "Product not found." });
             }
 
             return Ok(product);
@@ -74,8 +72,7 @@ namespace Week_2_Task_1.Controllers
         {
             if (id <= 0)
             {
-                return BadRequest(
-                    new { message = "Id must be greater than zero." });
+                return BadRequest(new { message = "Id must be greater than zero." });
             }
 
             try
@@ -84,8 +81,7 @@ namespace Week_2_Task_1.Controllers
 
                 if (!updated)
                 {
-                    return NotFound(
-                        new { message = "Product not found." });
+                    return NotFound( new { message = "Product not found." });
                 }
 
                 return NoContent();
@@ -104,16 +100,14 @@ namespace Week_2_Task_1.Controllers
         {
             if (id <= 0)
             {
-                return BadRequest(
-                    new { message = "Id must be greater than zero." });
+                return BadRequest(new { message = "Id must be greater than zero." });
             }
 
             bool deleted = _service.delete_product(id);
 
             if (!deleted)
             {
-                return NotFound(
-                    new { message = "Product not found." });
+                return NotFound(new { message = "Product not found." });
             }
 
             return NoContent();

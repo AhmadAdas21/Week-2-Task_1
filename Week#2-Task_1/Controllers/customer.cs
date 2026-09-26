@@ -26,10 +26,7 @@ namespace Week_2_Task_1.Controllers
             {
                 var createdCustomer = _service.add_customer(dto);
 
-                return CreatedAtAction(
-                    nameof(GetById),
-                    new { id = createdCustomer.id },
-                    createdCustomer);
+                return CreatedAtAction(nameof(GetById),new { id = createdCustomer.id },createdCustomer);
             }
             catch (ValidationException ex)
             {
@@ -61,8 +58,7 @@ namespace Week_2_Task_1.Controllers
 
             if (customer is null)
             {
-                return NotFound(
-                    new { message = "Customer not found." });
+                return NotFound(new { message = "Customer not found." });
             }
 
             return Ok(customer);
@@ -88,8 +84,7 @@ namespace Week_2_Task_1.Controllers
 
                 if (!updated)
                 {
-                    return NotFound(
-                        new { message = "Customer not found." });
+                    return NotFound(new { message = "Customer not found." });
                 }
 
                 return NoContent();
@@ -116,8 +111,7 @@ namespace Week_2_Task_1.Controllers
 
             if (!deleted)
             {
-                return NotFound(
-                    new { message = "Customer not found." });
+                return NotFound(new { message = "Customer not found." });
             }
 
             return NoContent();

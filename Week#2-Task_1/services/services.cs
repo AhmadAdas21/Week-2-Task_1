@@ -108,15 +108,7 @@ namespace Week_2_Task_1.services
         private static prod_responese ToProductResponse(
             product product)
         {
-            return new prod_responese
-            {
-                Id = product.Id,
-                Name = product.Name,
-                SKU = product.SKU,
-                Price = product.Price,
-                StockQuantity = product.StockQuantity,
-                IsActive = product.IsActive
-            };
+            return new prod_responese{Id = product.id,Name = product.name, SKU = product.sku, Price = product.price,stockk = product.stock,IsActive = product.active};
         }
     }
 }
