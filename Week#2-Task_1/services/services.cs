@@ -6,7 +6,7 @@ using Week_2_Task_1.models;
 namespace Week_2_Task_1.services
 
 {
-    public class services:iservices
+    public class services : iservices
     {
         private readonly store_data _store;
 
@@ -14,74 +14,172 @@ namespace Week_2_Task_1.services
         {
             _store = store;
         }
-        response_cus add_customer(create_customer dto)
+        public response_cus add_customer(create_customer dto)
         {
             ValidateDto(dto);
-            lock (_store.SyncRoot)
+
+            var newCustomer = new customer
             {
-                var newCustomer = new customer
+                id = _store.id_cus++,
+                name = dto.name.Trim(),
+                emal = dto.email.Trim()
+            };
+
+            _store.customers.Add(newCustomer);
+
+            return ToCustomerResponse(newCustomer);
+
+
+        }
+
+
+        public List<response_cus> get_customers()
+        {
+
+
+            return _store.customers.Select(c => ToCustomerResponse(c)).ToList();
+
+
+        }
+
+        public response_cus get_customer_by_id(int id)
+        {
+            var exist = _store.customers.FirstOrDefault(c => c.id == id);
+
+            if (exist is null)
+            {
+                return null;
+            }
+
+            return ToCustomerResponse(exist);
+        }
+
+        public bool update_customer(int id, update_customer dto)
+        {
+            ValidateDto(dto);
+
+            var existingCustomer = _store.customers
+                .FirstOrDefault(c => c.id == id);
+
+            if (existingCustomer is null)
+            {
+                return false;
+            }
+
+            existingCustomer.name = dto.name;
+            existingCustomer.emal = dto.email;
+
+            return true;
+
+        }
+
+        public bool delete_customer(int id)
+        {
+            var existingCustomer = _store.customers
+                    .FirstOrDefault(c => c.id == id);
+
+            if (existingCustomer is null)
+            {
+                return false;
+            }
+
+            _store.customers.Remove(existingCustomer);
+
+            return true;
+        }
+
+
+        public prod_responese add_product(create_product dto)
+        {
+            ValidateDto(dto);
+
+
+            string valid = dto.sku;
+
+            bool sku_ok = _store.products.Any(p => string.Equals(p.sku, valid, StringComparison.OrdinalIgnoreCase));
+
+            if (sku_ok)
+            {
+                throw new ValidationException("product with this sku exists.");
+            }
+
+            var newProduct = new product
+            {
+                id = _store.id_prod++,
+                name = dto.name,
+                sku =valid,
+                price = dto.price,
+                stock = dto.stock,
+               
+            };
+
+            _store.products.Add(newProduct);
+
+            return ToProductResponse(newProduct);
+
+        }
+
+        public List<prod_responese> get_products()
+        {
+            return _store.products.Select(p => ToProductResponse(p)).ToList();
+        }
+
+        public prod_responese? get_product_by_id(int id)
+        {
+            var p = _store.products.FirstOrDefault(x => x.id == id);
+
+            if (p is null)
+            {
+                return null;
+            }
+
+            return ToProductResponse(p);
+        }
+
+        public bool update_product(int id, update_prod dto)
+        {
+            ValidateDto(dto);
+
+           
+                var p = _store.products.FirstOrDefault(p => p.id == id);
+
+                if (p is null)
                 {
-                    Id = _store.id_cus++,
-                    Name = dto.Name.Trim(),
-                    Email = dto.Email.Trim()
-                };
+                    return false;
+                }
 
-                _store.customers.Add(newCustomer);
+            //    string Sku = dto.sku;
 
-                return ToCustomerResponse(newCustomer);
-            }
+              //  bool sku_ok = _store.products.Any(p =>p.id != id && string.Equals(p.sku,StringComparison.OrdinalIgnoreCase));
 
+              /*  if (skuExists)
+                {
+                    throw new ValidationException(
+                        "Another product already uses this SKU.");
+                }*/
+
+                p.name = dto.name;
+              //  p.sky = normalizedSku;
+                p.price = dto.price!;
+                p.stock =dto.stock;
+              //  existingProduct.active = dto.IsActive!.Value;
+
+                return true;
+            
         }
 
-
-        List<response_cus> get_customers()
+        public bool delete_product(int id)
         {
-            lock (_store.SyncRoot)
+            var p = _store.products.FirstOrDefault(p => p.id == id);
+
+            if (p is null)
             {
-                return _store.customers.Select(c => ToCustomerResponse(c)).ToList();
+                return false;
             }
 
-        }
+            _store.products.Remove(p);
 
-        response_cus get_customer_by_id(int id)
-        {
-
-        }
-
-        bool update_customer(int id, update_customer dto)
-        {
-
-        }
-
-        bool delete_customer(int id)
-        {
-
-        }
-
-
-        prod_responese add_product(create_product dto)
-        {
-
-        }
-
-        List<prod_responese> get_products()
-        {
-
-        }
-
-        prod_responese? get_product_by_id(int id)
-        {
-
-        }
-
-        bool update_product(int id, update_prod dto)
-        {
-
-        }
-
-        bool delete_product(int id)
-        {
-
+            return true;
         }
         private static void ValidateDto(object dto)
         {
@@ -99,16 +197,16 @@ namespace Week_2_Task_1.services
         {
             return new response_cus
             {
-                Id = customer.Id,
-                Name = customer.Name,
-                Email = customer.Email
+                id = customer.id,
+                name = customer.name,
+             //   emil = customer.email
             };
         }
 
         private static prod_responese ToProductResponse(
             product product)
         {
-            return new prod_responese{Id = product.id,Name = product.name, SKU = product.sku, Price = product.price,stockk = product.stock,IsActive = product.active};
+            return new prod_responese { id = product.id, name = product.name,  price = product.price, stock = product.stock, active = product.active };
         }
     }
 }
