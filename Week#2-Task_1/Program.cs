@@ -1,3 +1,6 @@
+using Week_2_Task_1.Data;
+using Week_2_Task_1.interfaces;
+using Week_2_Task_1.services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
