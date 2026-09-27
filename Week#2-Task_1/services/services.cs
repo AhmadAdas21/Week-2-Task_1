@@ -21,8 +21,8 @@ namespace Week_2_Task_1.services
             var newCustomer = new customer
             {
                 id = _store.id_cus++,
-                name = dto.name.Trim(),
-                emal = dto.email.Trim()
+                name = dto.name,
+                emal = dto.email
             };
 
             _store.customers.Add(newCustomer);
@@ -44,30 +44,29 @@ namespace Week_2_Task_1.services
 
         public response_cus get_customer_by_id(int id)
         {
-            var exist = _store.customers.FirstOrDefault(c => c.id == id);
+            var c = _store.customers.FirstOrDefault(x => x.id == id);
 
-            if (exist is null)
+            if (c is null)
             {
                 return null;
             }
 
-            return ToCustomerResponse(exist);
+            return ToCustomerResponse(c);
         }
 
         public bool update_customer(int id, update_customer dto)
         {
             ValidateDto(dto);
 
-            var existingCustomer = _store.customers
-                .FirstOrDefault(c => c.id == id);
+            var c = _store.customers.FirstOrDefault(x => x.id == id);
 
-            if (existingCustomer is null)
+            if (c is null)
             {
                 return false;
             }
 
-            existingCustomer.name = dto.name;
-            existingCustomer.emal = dto.email;
+            c.name = dto.name;
+            c.emal = dto.email;
 
             return true;
 
@@ -75,15 +74,14 @@ namespace Week_2_Task_1.services
 
         public bool delete_customer(int id)
         {
-            var existingCustomer = _store.customers
-                    .FirstOrDefault(c => c.id == id);
+            var c = _store.customers.FirstOrDefault(x => x.id == id);
 
-            if (existingCustomer is null)
+            if (c is null)
             {
                 return false;
             }
 
-            _store.customers.Remove(existingCustomer);
+            _store.customers.Remove(c);
 
             return true;
         }
@@ -124,7 +122,7 @@ namespace Week_2_Task_1.services
             return _store.products.Select(p => ToProductResponse(p)).ToList();
         }
 
-        public prod_responese? get_product_by_id(int id)
+        public prod_responese get_product_by_id(int id)
         {
             var p = _store.products.FirstOrDefault(x => x.id == id);
 
