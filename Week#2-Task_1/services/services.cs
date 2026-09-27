@@ -67,6 +67,7 @@ namespace Week_2_Task_1.services
 
             c.name = dto.name;
             c.emal = dto.email;
+            
 
             return true;
 
@@ -160,7 +161,7 @@ namespace Week_2_Task_1.services
               //  p.sky = normalizedSku;
                 p.price = dto.price!;
                 p.stock =dto.stock;
-              //  existingProduct.active = dto.IsActive!.Value;
+                p.active = dto.active;
 
                 return true;
             
