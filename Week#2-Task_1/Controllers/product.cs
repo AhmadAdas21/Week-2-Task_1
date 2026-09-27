@@ -19,14 +19,13 @@ namespace Week_2_Task_1.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(prod_responese), 201)]
         [ProducesResponseType(400)]
-        public ActionResult<prod_responese> Create(
-            [FromBody] create_product dto)
+        public ActionResult<prod_responese> Create([FromBody] create_product dto)
         {
             try
             {
-                var createdProduct = _service.add_product(dto);
+                var p = _service.add_product(dto);
 
-                return CreatedAtAction(nameof(GetById), new { id = createdProduct.id },createdProduct);
+                return CreatedAtAction(nameof(GetById), new { id = p.id },p);
             }
             catch (ValidationException ex)
             {
@@ -47,9 +46,9 @@ namespace Week_2_Task_1.Controllers
         [ProducesResponseType(404)]
         public ActionResult<prod_responese> GetById([FromRoute] int id)
         {
-            if (id <= 0)
+            if (id < 0)
             {
-                return BadRequest(new { message = "Id must be greater than zero." });
+                return BadRequest(new { message = " must be greater than zeroo or zero" });
             }
 
             var product = _service.get_product_by_id(id);
@@ -66,13 +65,11 @@ namespace Week_2_Task_1.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult Update(
-            [FromRoute] int id,
-            [FromBody] update_prod dto)
+        public IActionResult Update([FromRoute] int id,[FromBody] update_prod dto)
         {
-            if (id <= 0)
+            if (id < 0)
             {
-                return BadRequest(new { message = "Id must be greater than zero." });
+                return BadRequest(new { message = " must be greater than zero " });
             }
 
             try
@@ -98,16 +95,16 @@ namespace Week_2_Task_1.Controllers
         [ProducesResponseType(404)]
         public IActionResult Delete([FromRoute] int id)
         {
-            if (id <= 0)
+            if (id < 0)
             {
-                return BadRequest(new { message = "Id must be greater than zero." });
+                return BadRequest(new { message = "id must be greater than zero" });
             }
 
             bool deleted = _service.delete_product(id);
 
             if (!deleted)
             {
-                return NotFound(new { message = "Product not found." });
+                return NotFound(new { message = "product not found" });
             }
 
             return NoContent();

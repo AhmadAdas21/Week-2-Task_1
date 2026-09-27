@@ -19,14 +19,13 @@ namespace Week_2_Task_1.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(response_cus), 201)]
         [ProducesResponseType(400)]
-        public ActionResult<response_cus> Create(
-            [FromBody] create_customer dto)
+        public ActionResult<response_cus> Create([FromBody] create_customer dto)
         {
             try
             {
-                var createdCustomer = _service.add_customer(dto);
+                var C = _service.add_customer(dto);
 
-                return CreatedAtAction(nameof(GetById),new { id = createdCustomer.id },createdCustomer);
+                return CreatedAtAction(nameof(GetById),new { id = C.id },C);
             }
             catch (ValidationException ex)
             {
@@ -45,13 +44,12 @@ namespace Week_2_Task_1.Controllers
         [ProducesResponseType(typeof(response_cus), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public ActionResult<response_cus> GetById(
-            [FromRoute] int id)
+        public ActionResult<response_cus> GetById([FromRoute] int id)
         {
-            if (id <= 0)
+            if (id < 0)
             {
                 return BadRequest(
-                    new { message = "Id must be greater than zero." });
+                    new { message = "Id must be greater than zero or zero " });
             }
 
             var customer = _service.get_customer_by_id(id);
@@ -68,14 +66,11 @@ namespace Week_2_Task_1.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult Update(
-            [FromRoute] int id,
-            [FromBody] update_customer dto)
+        public IActionResult Update([FromRoute] int id,[FromBody] update_customer dto)
         {
-            if (id <= 0)
+            if (id < 0)
             {
-                return BadRequest(
-                    new { message = "Id must be greater than zero." });
+                return BadRequest( new { message = " must be greater than zero or zero" });
             }
 
             try
@@ -101,17 +96,17 @@ namespace Week_2_Task_1.Controllers
         [ProducesResponseType(404)]
         public IActionResult Delete([FromRoute] int id)
         {
-            if (id <= 0)
+            if (id < 0)
             {
                 return BadRequest(
-                    new { message = "Id must be greater than zero." });
+                    new { message = " must to be greater than zero." });
             }
 
             bool deleted = _service.delete_customer(id);
 
             if (!deleted)
             {
-                return NotFound(new { message = "Customer not found." });
+                return NotFound(new { message = "customer not created" });
             }
 
             return NoContent();
